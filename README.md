@@ -4,6 +4,10 @@
 ## Overview  
 This project demonstrates how to deploy an **Azure SQL Database** under a logical SQL Server with secure authentication, networking configuration, and sample data provisioning. It includes access validation through both the Azure Portal and **Azure Data Studio**, plus firewall integration with a linked Windows-based virtual machine.
 
+This repository has been sanitized to remove all sensitive cloud resource identifiers, including login credentials, security group names, public IPs, VPC and subnet IDs, and resource deletion steps. Any environment-specific values presented (such as sample firewall rules or admin logins) have been intentionally generic and are used solely for instructional purposes.
+
+All actions documented in this project follow Microsoft Azure best practices for authentication, access control, and resource protection. Always ensure keys, credentials, and infrastructure metadata are stored securely and never pushed to public repositories.
+
 ---
 
 ## 🛠️ Technologies Used
