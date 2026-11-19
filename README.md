@@ -1,63 +1,68 @@
-# azure-sql-db-sample-deployment
-# 🗄️ Azure SQL Database Deployment — Logical Server, Sample Data & VM Connectivity
+azure-sql-db-sample-deployment
+🗄️ Azure SQL Database Deployment — Logical Server, Sample Data & VM Connectivity
+Overview
 
-## Overview  
-This project demonstrates how to deploy an **Azure SQL Database** under a logical SQL Server with secure authentication, networking configuration, and sample data provisioning. It includes access validation through both the Azure Portal and **Azure Data Studio**, plus firewall integration with a linked Windows-based virtual machine.
+This project deploys an Azure SQL Database under a logical SQL server with SQL authentication, server-level firewall rules, and the AdventureWorksLT sample dataset. Access is validated from a Windows virtual machine using Azure Data Studio.
 
-This repository has been sanitized to remove all sensitive cloud resource identifiers, including login credentials, security group names, public IPs, VPC and subnet IDs, and resource deletion steps. Any environment-specific values presented (such as sample firewall rules or admin logins) have been intentionally generic and are used solely for instructional purposes.
+All resource names, logins, and IP addresses below are placeholders. Real credentials and network identifiers have been removed, and the original lab resources have been deleted.
 
-All actions documented in this project follow Microsoft Azure best practices for authentication, access control, and resource protection. Always ensure keys, credentials, and infrastructure metadata are stored securely and never pushed to public repositories.
+🛠️ Technologies Used
+Azure SQL Database: cloud-hosted relational database (General Purpose, Serverless)
+Azure SQL logical server: container for the database and its firewall rules
+AdventureWorksLT sample data: loaded for query testing
+Resource group: one group for all SQL and VM resources
+Windows virtual machine: client used to test connectivity
+Server-level firewall rule: allows the VM's public IP
+Azure Data Studio: GUI-based query execution
+🚀 Deployment Workflow
 
----
+Step 1: Create the resource group
 
-## 🛠️ Technologies Used
-- **Azure SQL Database** – Cloud-hosted relational DB  
-- **Azure SQL Server** – Logical container (`glsqlserver02`)  
-- **AdventureWorksLT Sample Data** – Loaded for query testing  
-- **Resource Group** – `GL-SQL-RG` for organized resource management  
-- **Virtual Machine** – Windows 10 Pro VM (`GL-SQL-VM`)  
-- **Firewall Rules** – Configured public IP access  
-- **Azure Data Studio** – GUI-based SQL query execution
+Name: <resource-group>
+Region: East US
 
----
+Step 2: Provision the logical SQL server
 
-## 🚀 Deployment Workflow
+Name: <sql-server-name>
+Region: East US
+Authentication: SQL authentication (<sql-admin-login>)
 
-### Step 1: Create Resource Group  
-Deployed `GL-SQL-RG` in East US to organize SQL and VM resources.
+Step 3: Deploy the database
 
-### Step 2: Provision Azure SQL Server  
-- Server name: `glsqlserver02`  
-- Location: East US  
-- Authentication: SQL authentication (`mbadmin`)
+Name: SampleDB
+Tier: General Purpose (Serverless)
+Sample schema: AdventureWorksLT
 
-### Step 3: Deploy SQL Database  
-- Database name: `SampleDB`  
-- Tier: General Purpose (Serverless)  
-- Loaded sample schema: `AdventureWorksLT`
+Step 4: Create the client VM
 
-### Step 4: Create Virtual Machine  
-- VM name: `GL-SQL-VM`  
-- OS: Windows 10 Pro  
-- Zone: East US  
-- Credentials: `gladmin / Password1Password2`
+Name: <vm-name>
+OS: Windows 10 Pro
+Region: East US
+Local admin: <vm-admin> with a strong password (not stored in this repo)
 
-### Step 5: Configure Firewall Rule  
-- Rule name: `AzureVMAccess`  
-- IP range: `40.76.251.110`  
-- Enabled access from the VM to SQL Server
+Step 5: Configure the firewall rule
 
-### Step 6: Test Access  
-- Connected to `SampleDB` using Azure Data Studio  
-- Ran: `SELECT * FROM [SalesLT].[Customer]`  
-- Verified dataset retrieval and server responsiveness
+Rule name: AzureVMAccess
+Start/end IP: <vm-public-ip>
+Allows only the VM's public IP to reach the SQL server
 
----
+Step 6: Test access
 
-## ✅ Outcomes  
-- Successfully deployed and queried Azure SQL Database with sample data  
-- Integrated VM access via firewall rule and public IP  
-- Used GUI tools to confirm network access and data interaction  
-- Gained experience in Azure networking, DB provisioning, and authentication flow  
+Connected to SampleDB from the VM using Azure Data Studio
+Ran a validation query:
+sql
+SELECT TOP (10) * FROM [SalesLT].[Customer];
+Confirmed data retrieval and server responsiveness
+✅ Outcomes
+Deployed and queried an Azure SQL Database loaded with sample data
+Restricted server access to a single client IP with a server-level firewall rule
+Validated connectivity and data access from a VM with Azure Data Studio
+Gained hands-on experience with Azure SQL provisioning, authentication, and network access control
+🔒 Production Considerations
 
+This lab used SQL authentication and a public-IP firewall rule for simplicity. In production I would:
 
+Use Microsoft Entra ID authentication and disable SQL logins where possible
+Use a private endpoint with public network access disabled, instead of IP-based firewall rules
+Store any secrets in Azure Key Vault
+Turn on auditing and Microsoft Defender for SQL
